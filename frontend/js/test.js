@@ -22,6 +22,39 @@ document.getElementById('audioFile').addEventListener('change', async (event) =>
     const canvas = document.getElementById('fftCanvas');
     const canvasContext = canvas.getContext('2d');
 
+    const fftBatch = [];
+    const batchInterval = 5000; // Send batch every 5 seconds
+
+    function sendToGeminiInChunks(batch, chunkSize, interval) {
+        let index = 0;
+
+        function sendNextChunk() {
+            if (index >= batch.length) return;
+
+            const chunk = batch.slice(index, index + chunkSize);
+            fetch('/test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fftData: chunk }),
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Gemini Analysis Result for Chunk:', result);
+                // Optionally display the result on the page
+            })
+            .catch(error => {
+                console.error('Error sending chunk to Gemini:', error);
+            });
+
+            index += chunkSize;
+            setTimeout(sendNextChunk, interval); // Delay before sending the next chunk
+        }
+
+        sendNextChunk();
+    }
+
     function draw() {
         requestAnimationFrame(draw);
 
@@ -42,7 +75,20 @@ document.getElementById('audioFile').addEventListener('change', async (event) =>
 
             x += barWidth + 1;
         }
+
+        // Add current FFT data to the batch
+        fftBatch.push(Array.from(dataArray));
     }
+
+    // Periodically send the batch to Gemini in chunks
+    setInterval(() => {
+        if (fftBatch.length > 0) {
+            const chunkSize = 10; // Number of FFT data arrays per chunk
+            const interval = 5000; // 5 seconds between chunk requests
+            sendToGeminiInChunks(fftBatch, chunkSize, interval);
+            fftBatch.length = 0; // Clear the batch after initiating chunked sending
+        }
+    }, batchInterval);
 
     draw();
 });

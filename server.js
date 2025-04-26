@@ -9,6 +9,9 @@ const { GoogleGenAI, createUserContent, createPartFromUri } = genai;
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json()); // Middleware to parse JSON request bodies
+
 // Serve static files from the frontend directory
 app.use(express.static(path.join(__dirname, 'frontend')));
 
@@ -16,7 +19,6 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
-
 
 // Default route to serve the main page
 app.get('/hihi', async (req, res) => {
@@ -40,6 +42,31 @@ app.get('/hihi', async (req, res) => {
 
   res.type('text/plain');
   res.send(response.text);
+});
+
+// New endpoint to analyze FFT data
+app.post('/test', async (req, res) => {
+    const { fftData } = req.body;
+
+    if (!fftData || !Array.isArray(fftData)) {
+        return res.status(400).send('Invalid FFT data');
+    }
+
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.0-flash",
+            contents: createUserContent([
+                `Analyze the following FFT data: ${JSON.stringify(fftData)}.
+                Identify any patterns, anomalies, or frequencies that may be unpleasant to human hearing.
+                Provide a detailed explanation of your findings and suggest improvements if necessary.`,
+            ]),
+        });
+
+        res.json({ analysis: response.text });
+    } catch (error) {
+        console.error('Error analyzing FFT data:', error);
+        res.status(500).send('Failed to analyze FFT data');
+    }
 });
 
 app.listen(PORT, () => {
