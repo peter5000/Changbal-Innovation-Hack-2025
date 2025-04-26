@@ -21,9 +21,9 @@ app.get('/', (req, res) => {
 // Default route to serve the main page
 app.get('/hihi', async (req, res) => {
   const myfile = await ai.files.upload({
-    // file: "assets/Dr.Hear kanye & elon OG.mp3",
+    file: "assets/Dr.Hear kanye & elon OG.mp3",
     // file: "assets/sound.mp3",
-    file: "assets/uneasy_sound.mp3",
+    // file: "assets/uneasy_sound.mp3",
     config: { mimeType: "audio/mp3" },
   });
   // console.log("myfile: ", myfile);
@@ -33,7 +33,7 @@ app.get('/hihi', async (req, res) => {
     contents: createUserContent([
       createPartFromUri(myfile.uri, myfile.mimeType),
       // "With given audio clip, provide all of the information about the audio and its frequency and find for any peak points if possible. Give us a detailed explanation why you can't do it.",
-      "With given audio clip, analyze each 10 seconds segment. Provide analysis on each range and evaluate whether the range would be conceived unpleasant to human. Then explain the reason.",
+      "With given audio clip, analyze each 5 seconds interval. Provide analysis on each range and evaluate whether the range would be conceived unpleasant to human. Analyze not only the main sound, but also the background noise. Then explain the reason with detail. At the end, provide an overall audio quality",
       // "guess which animal made this sound",
     ]),
   });
