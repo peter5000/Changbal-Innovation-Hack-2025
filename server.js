@@ -1,13 +1,13 @@
 const express = require('express');
 const path = require('path');
-
+require('dotenv').config();
 const app = express();
 const PORT = 3500;
 
 const genai = require('@google/genai');
 const { GoogleGenAI, createUserContent, createPartFromUri } = genai;
 
-const ai = new GoogleGenAI({ apiKey: "" });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 // Serve static files from the frontend directory
 app.use(express.static(path.join(__dirname, 'frontend')));
