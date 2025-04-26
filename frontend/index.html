@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Hear</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Dr. Hear</h1>
+        <select id="pageSelector" onchange="navigateToPage()">
+            <option value="">Select Page</option>
+            <option value="hear.html">Hear</option>
+            <option value="test.html">Test</option>
+        </select>
+    </header>
+    <main>
+        <p>This is a basic website created for the hackathon project.</p>
+        <button id="alertButton">Click Me</button>
+    </main>
+    <footer>
+        <p>&copy; 2023 Dr. Hear</p>
+    </footer>
+    <script src="js/script.js"></script>
+    <script>
+        function navigateToPage() {
+            const selector = document.getElementById('pageSelector');
+            const selectedPage = selector.value;
+            if (selectedPage) {
+                window.location.href = selectedPage;
+            }
+        }
+    </script>
+</body>
+</html>
