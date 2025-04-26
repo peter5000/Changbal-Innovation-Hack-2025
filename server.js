@@ -21,9 +21,9 @@ app.get('/', (req, res) => {
 // Default route to serve the main page
 app.get('/hihi', async (req, res) => {
   const myfile = await ai.files.upload({
-    // file: "C:/Users/chans/Documents/project/hackathon/Dr-Hear/assets/Dr.Hear kanye & elon OG.mp3",
-    // file: "C:/Users/chans/Documents/project/hackathon/Dr-Hear/assets/sound.mp3",
-    file: "C:/Users/chans/Documents/project/hackathon/Dr-Hear/assets/uneasy_sound.mp3",
+    // file: "assets/Dr.Hear kanye & elon OG.mp3",
+    // file: "assets/sound.mp3",
+    file: "assets/uneasy_sound.mp3",
     config: { mimeType: "audio/mp3" },
   });
   // console.log("myfile: ", myfile);
